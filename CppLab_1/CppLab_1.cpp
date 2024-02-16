@@ -1,58 +1,58 @@
 ﻿#include <iostream>
+#include <vector>
 
 bool get_coef(double* a, double* b, double* c) {
-
-    try {
-        std::cin >> *a;
-        if (*a == 0) {
-            std::cout << "Incorrect coef a";
-            return false;
-        }
-        std::cin >> *b;
-        std::cin >> *c;
+    std::cin >> *a;
+    std::cin >> *b;
+    if (*a == 0 && *b == 0) {
+        std::cout << "Incorrect coefs";
+        return false;
     }
-    catch (const std::istream::failure& ex) {
-        std::cerr << "Failed to read coef: " << ex.what() << "\n";
-    }
+    std::cin >> *c;
 
     return true;
 
 }
 
-void print_roots(const double root1, const double root2, const bool has_root) {
-    if (has_root && root1 == root2) {
-        std::cout << root2 << "\n";
-    }
-    else if (has_root) {
-        std::cout << root1 << " " << root2 << "\n";
-    }
-    else {
+void print_roots(std::vector<double>* const roots) {
+    if ((*roots).size() == 0) {
         std::cout << "No real roots\n";
     }
-
-}
-
-bool solve_problem(const double a, const double b, const double c, double* root1, double* root2) {
-    double discriminant = b * b - 4 * a * c;
-
-    if (discriminant >= 0) {
-        *root1 = (-b + sqrt(discriminant)) / (2 * a);
-        *root2 = (-b - sqrt(discriminant)) / (2 * a);
-        return true;
+    else {
+        for (double root : *roots) {
+            std::cout << root << " ";
+        }
+        std::cout << "\n";
     }
-    return false;
+
+}
+
+void find_roots(const double a, const double b, const double c, std::vector<double>* roots) {
+    double discriminant = b * b - 4 * a * c;
+    if (discriminant > 0) {
+        (*roots).push_back((-b + sqrt(discriminant))/ (2 * a));
+        (*roots).push_back((-b - sqrt(discriminant)) / (2 * a));
+    }
+    else if (discriminant == 0) {
+        (*roots).push_back(-b / (2 * a));
+    }
+    else if (a == 0) {
+        (*roots).push_back(-c / b);
+    }
 }
 
 
-
+void solution() {
+    double a, b, c;
+    if (get_coef(&a, &b, &c)) {
+        std::vector<double> roots;
+        find_roots(a, b, c, &roots);
+        print_roots(&roots);
+    }
+}
 
 
 int main()
 {
-    double a, b, c;
-    if (get_coef(&a, &b, &c)) {
-        double root1, root2;
-        bool has_root = solve_problem(a, b, c, &root1, &root2);
-        print_roots(root1, root2, has_root);
-    }
+    solution();
 }
