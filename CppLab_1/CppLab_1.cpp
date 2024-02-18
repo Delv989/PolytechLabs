@@ -29,15 +29,18 @@ void print_roots(std::vector<double>* const roots) {
 
 void find_roots(const double a, const double b, const double c, std::vector<double>* roots) {
     double discriminant = b * b - 4 * a * c;
-    if (discriminant > 0) {
-        (*roots).push_back((-b + sqrt(discriminant))/ (2 * a));
-        (*roots).push_back((-b - sqrt(discriminant)) / (2 * a));
+    if  (a == 0) {
+        (*roots).push_back(-c / b);
+        return;
     }
     else if (discriminant == 0) {
         (*roots).push_back(-b / (2 * a));
+        return;
     }
-    else if (a == 0) {
-        (*roots).push_back(-c / b);
+    else if (discriminant > 0) {
+        (*roots).push_back((-b + sqrt(discriminant)) / (2 * a));
+        (*roots).push_back((-b - sqrt(discriminant)) / (2 * a));
+        return;
     }
 }
 
