@@ -1,15 +1,17 @@
 ﻿#include <iostream>
 #include <vector>
+#include <limits>
 
 bool get_coef(double* a, double* b, double* c) {
     std::cin >> *a;
     std::cin >> *b;
-    if (*a == 0 && *b == 0) {
-        std::cout << "Incorrect coefs";
-        return false;
-    }
     std::cin >> *c;
+    if (a == NULL || b == NULL || c == NULL)
+        return false;
 
+    if (*a < std::numeric_limits<double>::epsilon() && *b < std::numeric_limits<double>::epsilon()) 
+        return false;
+    
     return true;
 
 }
@@ -29,11 +31,11 @@ void print_roots(std::vector<double>* const roots) {
 
 void find_roots(const double a, const double b, const double c, std::vector<double>* roots) {
     double discriminant = b * b - 4 * a * c;
-    if  (a == 0) {
+    if  (a < std::numeric_limits<double>::epsilon()) {
         (*roots).push_back(-c / b);
         return;
     }
-    else if (discriminant == 0) {
+    else if (discriminant < std::numeric_limits<double>::epsilon()) {
         (*roots).push_back(-b / (2 * a));
         return;
     }
@@ -45,17 +47,15 @@ void find_roots(const double a, const double b, const double c, std::vector<doub
 }
 
 
-void solution() {
+int main()
+{
     double a, b, c;
     if (get_coef(&a, &b, &c)) {
         std::vector<double> roots;
         find_roots(a, b, c, &roots);
         print_roots(&roots);
     }
-}
-
-
-int main()
-{
-    solution();
+    else {
+        std::cout << "Incorrect coef\n";
+    }
 }
