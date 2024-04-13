@@ -2,20 +2,10 @@
 #include <vector>
 #include <limits>
 #include <fstream>
+#include <unordered_map>
+#include <string>
+#include <sstream>
 
-/*
-bool get_coef(double* a, double* b, double* c) {
-    if (!(std::cin >> *a >> *b >> *c)) {
-        std::cout << "Wrong input";
-        return false;
-    }
-    if (is_equal_zero(*a) && is_equal_zero(*b)) {
-        std::cout << "Incorrect coef\n";
-        return false;
-    }
-    return true;
-};
-*/
 
 class Equation {
 public:
@@ -54,60 +44,33 @@ public:
 class Student {
 public:
 	std::string name;
+    virtual void solve_equation(Equation equation, std::vector<double>* roots) {
+        equation.find_roots(roots);
+        return;
+    }
 };
+
+
 class BadStudent : public Student {
 public:
    void solve_equation(Equation equation, std::vector<double>* roots) {
         roots->push_back(0);
         return;
     }
-    void solve_test(std::ifstream& in, std::ofstream& out) {
-        if (in.is_open()) {
-            double a, b, c;
-            while (in >> a >> b >> c) {
-                Equation* equation = new Equation(a, b, c);
-                std::vector<double> roots;
-                solve_equation(*equation, &roots);
-                if (out.is_open()) {
-                    for (double root : roots) {
-                        out << root << " ";
-                    }
-                    out << "\n";
-                }
-            }
-        }
-    }
     BadStudent(std::string s) {
         name = s;
     }
 
 };
+
+
 class GoodStudent : public Student {
 public:
-    void solve_equation(Equation equation, std::vector<double>* roots) {
-        equation.find_roots(roots);
-        return;
-    }
-    void solve_test(std::ifstream& in, std::ofstream& out) {
-        if (in.is_open()) {
-            double a, b, c;
-            while (in >> a >> b >> c) {
-                Equation* equation = new Equation(a, b, c);
-                std::vector<double> roots;
-                solve_equation(*equation, &roots);
-                if (out.is_open()) {
-                    for (double root : roots) {
-                        out << root << " ";
-                    }
-                    out << "\n";
-                }
-            }
-        }
-    }
     GoodStudent(std::string s) {
         name = s;
     }
 };
+
 
 class AverageStudent : public Student {
 public:
@@ -124,32 +87,112 @@ public:
             return;
         }
     }
-    void solve_test(std::ifstream& in, std::ofstream& out) {
-        if (in.is_open()) {
-            double a, b, c;
-            while (in >> a >> b >> c) {
-                Equation* equation = new Equation(a, b, c);
-                std::vector<double> roots;
-                solve_equation(*equation, &roots);
-                if (out.is_open()) {
-                    for (double root : roots) {
-                        out << root << " ";
-                    }
-                    out << "\n";
-                }
-            }
-        }
-    }
     AverageStudent(std::string s) {
         name = s;
     }
 };
 
+
+class Teacher {
+public:
+    std::string name;
+    std::unordered_map<std::string, int> progress_table;
+    bool check_answer(Equation equation, std::vector<double>* roots) {
+        std::vector<double> right_roots;
+        equation.find_roots(&right_roots);
+        if (right_roots.size() != roots->size())
+            return false;
+        for (int i = 0; i < roots->size(); i++) {
+            if (roots[i] != right_roots)
+                return false;
+        }
+        return true;
+    }
+    void check_test(std::ifstream& in, std::ofstream& out) {
+        std::string row;
+        while (std::getline(in, row)) {
+            std::stringstream line(row);
+            double a, b, c;
+            line >> a >> b >> c;
+            Equation* equation = new Equation(a, b, c);
+            std::string other;
+            std::getline(in, other, '(');
+
+            std::string solutions;
+            std::getline(in, solutions, ')');
+            std::stringstream ss(solutions);
+            std::vector<double> roots;
+            double root;
+            while (ss >> root) {
+                roots.push_back(root);
+            }
+
+            std::string other1;
+            std::getline(in, other1, ' ');
+
+            std::string student;
+            std::getline(in, student);
+
+            if (check_answer(*equation, &roots)) {
+                if (progress_table.find(student) == progress_table.end()) {
+                    progress_table[student] = 1;
+                }
+                else {
+                    progress_table[student]++;
+                }
+            }
+            else if (progress_table.find(student) == progress_table.end())
+                progress_table[student] = 0;
+        }
+    }
+    void print_progress_table(std::ofstream& out) {
+        for (auto const& row : progress_table) {
+            out << row.first << " " << row.second << "\n";
+        }
+    }
+        
+    Teacher(std::string s) {
+        name = s;
+    }
+};
+
+
+void solve_test(Student* student, std::ifstream& in, std::ofstream& out) {
+    in.clear();
+    in.seekg(0, std::ios::beg);
+    if (in.is_open()) {
+        double a, b, c;
+        while (in >> a >> b >> c) {
+            Equation* equation = new Equation(a, b, c);
+            std::vector<double> roots;
+            student->solve_equation(*equation, &roots);
+            if (out.is_open()) {
+                out << a << " " << b << " " << c << " ";
+                out << "(";
+                for (double root : roots) {
+                    out << root << " ";
+                }
+                out << ") ";
+                out << student->name;
+                out << "\n";
+            }
+        }
+    }
+}
+
 int main() {
     srand(time(0));
-    AverageStudent* me = new AverageStudent("123");
-    std::ifstream in("input.txt");
-    std::ofstream out("output.txt");
-
-    me->solve_test(in, out);
+    Student* me = new AverageStudent("123");
+    Student* he = new GoodStudent("456");
+    std::ifstream in("input_students.txt");
+    std::ofstream out("output_students.txt");
+    solve_test(me, in, out);
+    solve_test(he, in, out);
+    Teacher* t = new Teacher("Veronika");
+    in.close();
+    out.close();
+    std::ifstream in1("output_students.txt");
+    std::ofstream out1("output_teacher.txt");
+    t->check_test(in1, out1);
+    t->print_progress_table(out1);
 }
