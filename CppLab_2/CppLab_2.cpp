@@ -5,6 +5,10 @@
 #include <unordered_map>
 #include <string>
 #include <sstream>
+#include <queue>
+
+
+
 
 
 class Equation {
@@ -37,7 +41,25 @@ public:
         b = in_b;
         c = in_c;
     }
+    void operator=(const Equation& equation) {
+        this->a = equation.a;
+        this->b = equation.b;
+        this->c = equation.c;
+    }
 };
+
+class Answer {
+public:
+    Equation* equation;
+    std::vector<double>* roots;
+    std::string name_student;
+    Answer(Equation eq, std::vector<double>* in_roots, std::string name) {
+        equation = new Equation(eq.a, eq.b, eq.c);
+        roots = in_roots;
+        name_student = name;
+    }
+};
+
 
 
 
@@ -97,52 +119,27 @@ class Teacher {
 public:
     std::string name;
     std::unordered_map<std::string, int> progress_table;
-    bool check_answer(Equation equation, std::vector<double>* roots) {
+    bool check_answer(Equation* equation, std::vector<double>* roots) {
         std::vector<double> right_roots;
-        equation.find_roots(&right_roots);
+        equation->find_roots(&right_roots);
         if (right_roots.size() != roots->size())
             return false;
         for (int i = 0; i < roots->size(); i++) {
-            if (roots[i] != right_roots)
+            if (( * roots)[i] != right_roots[i])
                 return false;
         }
         return true;
     }
-    void check_test(std::ifstream& in, std::ofstream& out) {
-        std::string row;
-        while (std::getline(in, row)) {
-            std::stringstream line(row);
-            double a, b, c;
-            line >> a >> b >> c;
-            Equation* equation = new Equation(a, b, c);
-            std::string other;
-            std::getline(in, other, '(');
-
-            std::string solutions;
-            std::getline(in, solutions, ')');
-            std::stringstream ss(solutions);
-            std::vector<double> roots;
-            double root;
-            while (ss >> root) {
-                roots.push_back(root);
+    void check_test(std::queue<Answer*>* answers_student) {
+        while (!answers_student->empty()) {
+            Answer* ans = answers_student->front();
+            answers_student->pop();
+            if (progress_table.find(ans->name_student) == progress_table.end()) {
+                progress_table[ans->name_student] = 0;
             }
-
-            std::string other1;
-            std::getline(in, other1, ' ');
-
-            std::string student;
-            std::getline(in, student);
-
-            if (check_answer(*equation, &roots)) {
-                if (progress_table.find(student) == progress_table.end()) {
-                    progress_table[student] = 1;
-                }
-                else {
-                    progress_table[student]++;
-                }
+            if (check_answer(ans->equation, ans->roots)) {
+                progress_table[ans->name_student]++;
             }
-            else if (progress_table.find(student) == progress_table.end())
-                progress_table[student] = 0;
         }
     }
     void print_progress_table(std::ofstream& out) {
@@ -154,28 +151,20 @@ public:
     Teacher(std::string s) {
         name = s;
     }
+
 };
 
 
-void solve_test(Student* student, std::ifstream& in, std::ofstream& out) {
+void solve_test(Student* student, std::ifstream& in, std::queue<Answer*>* out) {
     in.clear();
     in.seekg(0, std::ios::beg);
     if (in.is_open()) {
         double a, b, c;
         while (in >> a >> b >> c) {
             Equation* equation = new Equation(a, b, c);
-            std::vector<double> roots;
-            student->solve_equation(*equation, &roots);
-            if (out.is_open()) {
-                out << a << " " << b << " " << c << " ";
-                out << "(";
-                for (double root : roots) {
-                    out << root << " ";
-                }
-                out << ") ";
-                out << student->name;
-                out << "\n";
-            }
+            std::vector<double>* roots = new std::vector<double>;
+            student->solve_equation(*equation, roots);
+            out->push(new Answer(*equation, roots, student->name));
         }
     }
 }
@@ -185,14 +174,15 @@ int main() {
     Student* me = new AverageStudent("123");
     Student* he = new GoodStudent("456");
     std::ifstream in("input_students.txt");
-    std::ofstream out("output_students.txt");
-    solve_test(me, in, out);
-    solve_test(he, in, out);
-    Teacher* t = new Teacher("Veronika");
+    std::queue<Answer*> all_answers;
+    solve_test(me, in, &all_answers);
+    solve_test(he, in, &all_answers);
     in.close();
+
+    Teacher* t = new Teacher("Veronika");
+    std::ofstream out("output_teacher.txt");
+    t->check_test(&all_answers);
+    t->print_progress_table(out);
+
     out.close();
-    std::ifstream in1("output_students.txt");
-    std::ofstream out1("output_teacher.txt");
-    t->check_test(in1, out1);
-    t->print_progress_table(out1);
 }
