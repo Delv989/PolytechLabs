@@ -66,10 +66,7 @@ public:
 class Student {
 public:
 	std::string name;
-    virtual void solve_equation(Equation equation, std::vector<double>* roots) {
-        equation.find_roots(roots);
-        return;
-    }
+    virtual void solve_equation(Equation equation, std::vector<double>* roots) {}
 };
 
 
@@ -90,6 +87,10 @@ class GoodStudent : public Student {
 public:
     GoodStudent(std::string s) {
         name = s;
+    }
+    void solve_equation(Equation equation, std::vector<double>* roots) {
+        equation.find_roots(roots);
+        return;
     }
 };
 
@@ -125,7 +126,7 @@ public:
         if (right_roots.size() != roots->size())
             return false;
         for (int i = 0; i < roots->size(); i++) {
-            if (( * roots)[i] != right_roots[i])
+            if (abs(( * roots)[i] - right_roots[i]) > std::numeric_limits<double>::epsilon())
                 return false;
         }
         return true;
@@ -171,15 +172,15 @@ void solve_test(Student* student, std::ifstream& in, std::queue<Answer*>* out) {
 
 int main() {
     srand(time(0));
-    Student* me = new AverageStudent("123");
-    Student* he = new GoodStudent("456");
+    std::vector<Student*> group = {new AverageStudent("average"), new GoodStudent("good"), new BadStudent("bad")};
     std::ifstream in("input_students.txt");
     std::queue<Answer*> all_answers;
-    solve_test(me, in, &all_answers);
-    solve_test(he, in, &all_answers);
+    for (Student* student : group) {
+        solve_test(student, in, &all_answers);
+    }
     in.close();
 
-    Teacher* t = new Teacher("Veronika");
+    Teacher* t = new Teacher("teacher");
     std::ofstream out("output_teacher.txt");
     t->check_test(&all_answers);
     t->print_progress_table(out);
