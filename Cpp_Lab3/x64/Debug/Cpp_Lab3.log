@@ -1,5 +1,0 @@
-﻿  board.cpp
-C:\Users\Dmitriy\source\repos\Cpp_Lab3\Cpp_Lab3\bonus_test.h(9,20): warning C4305: инициализация: усечение из "double" в "float"
-C:\Users\Dmitriy\source\repos\Cpp_Lab3\Cpp_Lab3\board.cpp(63,15): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\Dmitriy\source\repos\Cpp_Lab3\Cpp_Lab3\board.cpp(64,15): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
-  Cpp_Lab3.vcxproj -> C:\Users\Dmitriy\source\repos\Cpp_Lab3\x64\Debug\Cpp_Lab3.exe
