@@ -12,9 +12,9 @@ namespace Global {
     static constexpr float PlatformHeight = 12.f;
 
     static constexpr float BallRadius = 10.f;
-    static constexpr int BallAcceleration = 4;
-    static constexpr float BallSpeedX = .3f;
-    static constexpr float BallSpeedY = .4f;
+    static constexpr int BallAcceleration = 2;
+    static constexpr float BallSpeedX = .1f;
+    static constexpr float BallSpeedY = .15f;
 
     static constexpr int BricksCountX = 8;
     static constexpr int BricksCountY = 10;

@@ -18,6 +18,11 @@ public:
     virtual std::list<std::shared_ptr<Brick>>& GetBricks() = 0;
     virtual sf::RenderWindow& GetWindow() = 0;
     virtual void SpawnBall() = 0;
+    virtual void SpawnBonus(const sf::Vector2f& position) = 0;
 
+
+    virtual void SpawnMovingBrick() = 0;
+
+    virtual void Speedup() = 0;
 
 };

@@ -27,3 +27,50 @@ bool IndestructibleBrick::IsDestructible() {
 }
 
 void IndestructibleBrick::Destroy() {}
+
+void BonusBrick::Destroy() {
+
+	Brick::Destroy();
+
+	if (Brick::IsDestroyed()) {
+		game.SpawnBonus(shape.getPosition());
+	}
+}
+
+
+void MovingBrick::Move() {
+	shape.move(speed);
+}
+
+void MovingBrick::Update() {
+
+	if ((Left() < 0) || ((float)game.GetWindow().getSize().x < Right())) {
+		RotateX();
+	}
+	bool handleX = true;
+	bool handleY = true;
+
+	for (auto& brick : game.GetBricks()) {
+		if (brick->IsDestroyed()) {
+			continue;
+		}
+
+		if (int orient = Collide(this, brick.get())) {
+
+			if (handleX && orient > 0) {
+				RotateX();
+				handleX = false;
+			}
+
+		}
+	}
+	//std::cout << this->GetSpeed().x << this->GetSpeed().y;
+	Move();
+}
+
+void AccelerationBrick::Destroy() {
+	
+	Brick::Destroy();
+	if(IsDestroyed())
+		game.Speedup();
+}

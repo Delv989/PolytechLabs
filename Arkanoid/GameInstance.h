@@ -11,6 +11,7 @@
 #include "Platform.h"
 #include "Ball.h"
 #include "Brick.h"
+#include "Bonus.h"
 
 
 class GameInstance : public Game {
@@ -25,10 +26,14 @@ public:
     virtual std::list<std::shared_ptr<Brick>>& GetBricks() override;
     virtual sf::RenderWindow& GetWindow() override;
     virtual void SpawnBall() override;
+    virtual void SpawnBonus(const sf::Vector2f& position) override;
+
+    virtual void SpawnMovingBrick() override;
 
     void Start();
     void Run();
 
+    virtual void Speedup() override;
 
 private:
     void SpawnBricks();
@@ -40,9 +45,9 @@ private:
 
     std::list<std::shared_ptr<Brick>> bricks;
     std::shared_ptr<Ball> ball;
+    std::list<std::shared_ptr<Bonus>> bonuses;
 
     int score{ 0 };
-
 
     int fps{ Global::IterationsPerFrame };
 };

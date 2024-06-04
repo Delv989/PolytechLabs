@@ -39,6 +39,9 @@ void GameInstance::Run() {
             for (auto brick : bricks) {
                 brick->Update();
             }
+            for (auto bonus : bonuses) {
+                bonus->Update();
+            }
             ball->Update();
 
 
@@ -57,6 +60,15 @@ void GameInstance::Run() {
                 it++;
             }
 
+            auto bonusesIter = bonuses.begin();
+            while (bonusesIter != bonuses.end()) {
+                if ((*bonusesIter)->IsDestroyed()) {
+                    bonusesIter = bonuses.erase(bonusesIter);
+                    continue;
+                }
+                bonusesIter++;
+            }
+
             if (win) {
                 std::cout << score;
                 return;
@@ -71,6 +83,11 @@ void GameInstance::Run() {
         for (auto brick : bricks) {
             brick->Draw();
         }
+
+        for (auto bonus : bonuses) {
+            bonus->Draw();
+        }
+
         mWindow.display();
     }
 }
@@ -104,13 +121,35 @@ void GameInstance::SpawnBricks() {
                     Global::BricksGap + (float)j * (Global::BrickWidth + Global::BricksGap),
                     Global::BricksGap + (float)i * (Global::BrickHeight + Global::BricksGap)
             };
-
-            if (id % 13 == 0) {
+            
+            if (id % 11 == 0) {
                 bricks.emplace_front(std::make_shared<IndestructibleBrick>(*this, pos));
                 continue;
             }
+            if (id % 13 == 0) {
+                bricks.emplace_front(std::make_shared<AccelerationBrick>(*this, pos));
+                continue;
+            }
+            if (id % 17 == 0) {
+                bricks.emplace_front(std::make_shared<BonusBrick>(*this, pos));
+                continue;
+            }
+            
             bricks.emplace_front(std::make_shared<DefaultBrick>(*this, pos));
+            
         }
     }
 
+}
+
+void GameInstance::SpawnBonus(const sf::Vector2f& position) {
+    bonuses.emplace_back(std::make_shared<MovingBrickBonus>(*this, position));
+}
+
+void GameInstance::Speedup() {
+    fps += Global::BallAcceleration;
+}
+
+void GameInstance::SpawnMovingBrick() {
+    bricks.emplace_front(std::make_shared<MovingBrick>(*this));
 }
