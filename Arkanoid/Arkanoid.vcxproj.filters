@@ -15,11 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="..\..\..\..\..\..\SFML\SFML-2.6.1\bin\openal32.dll" />
     <None Include="..\..\..\..\..\..\SFML\SFML-2.6.1\bin\sfml-audio-2.dll" />
     <None Include="..\..\..\..\..\..\SFML\SFML-2.6.1\bin\sfml-audio-d-2.dll" />
