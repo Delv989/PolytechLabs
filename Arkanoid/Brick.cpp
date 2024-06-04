@@ -17,8 +17,9 @@ void Brick::Draw() {
 void Brick::Move() {}
 
 void Brick::Destroy() {
-	game.IncreaseScore();
 	hp -= 1;
+	if(IsDestroyed())
+		game.IncreaseScore();
 }
 
 bool IndestructibleBrick::IsDestructible() {

@@ -10,8 +10,8 @@ void Ball::Update() {
     }
 
     if ((float)game.GetWindow().getSize().y < Bottom()) {
-        alive = false;
-        return;
+        game.DecreaseScore();
+        RotateY();
     }
 
     if (Collide(this, &game.GetPlatform()) < 0 && (Bottom() < game.GetPlatform().Bottom())) {
@@ -21,13 +21,25 @@ void Ball::Update() {
     bool handleX = true;
     bool handleY = true;
 
-    //написать проверку столкновени€ с кирпичами
+    for (auto& brick : game.GetBricks()) {
+        if (brick->IsDestroyed()) {
+            continue;
+        }
+
+        if (int orient = Collide(this, brick.get())) {
+            brick->Destroy();
+            if (handleX && orient > 0) {
+                RotateX();
+                handleX = false;
+            }
+            if (handleY && orient < 0) {
+                RotateY();
+                handleY = false;
+            }
+        }
+    }
 
     Move();
-}
-
-bool Ball::IsAlive() {
-    return alive;
 }
 
 void Ball::Move() {

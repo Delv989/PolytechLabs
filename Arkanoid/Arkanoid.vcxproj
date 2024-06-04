@@ -146,6 +146,26 @@
     <None Include="..\..\..\..\..\..\SFML\SFML-2.6.1\bin\sfml-window-2.dll" />
     <None Include="..\..\..\..\..\..\SFML\SFML-2.6.1\bin\sfml-window-d-2.dll" />
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Ball.cpp" />
+    <ClCompile Include="Brick.cpp" />
+    <ClCompile Include="Collider.cpp" />
+    <ClCompile Include="GameInstance.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="MovingObject.cpp" />
+    <ClCompile Include="Platform.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Ball.h" />
+    <ClInclude Include="Brick.h" />
+    <ClInclude Include="Collider.h" />
+    <ClInclude Include="Game.h" />
+    <ClInclude Include="GameInstance.h" />
+    <ClInclude Include="GameObject.h" />
+    <ClInclude Include="Global.h" />
+    <ClInclude Include="MovingObject.h" />
+    <ClInclude Include="Platform.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

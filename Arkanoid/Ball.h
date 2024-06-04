@@ -4,6 +4,7 @@
 #include "Collider.h"
 #include "MovingObject.h"
 #include "Platform.h"
+#include "Brick.h"
 
 class Ball : public CircleCollider {
 
@@ -14,13 +15,10 @@ public:
         shape.setPosition(position);
     }
 
-    bool IsAlive();
-
     virtual void Update() override;
     virtual void Move() override;
     virtual void Draw() override;
 
 private:
     sf::CircleShape shape;
-    bool alive{ true };
 };
