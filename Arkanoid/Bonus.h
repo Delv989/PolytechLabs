@@ -6,6 +6,8 @@
 #include "MovingObject.h"
 #include "Platform.h"
 
+#include <iostream>
+
 
 class Bonus : public BoxCollider {
 public:
@@ -34,6 +36,20 @@ private:
 class MovingBrickBonus : public Bonus {
 public:
 	MovingBrickBonus(Game& game, const sf::Vector2f& position) : Bonus(game, position, sf::Color::Green) {}
+
+	virtual void Activate() override;
+};
+
+class FloorBonus : public Bonus {
+public:
+	FloorBonus(Game& game, const sf::Vector2f& position) : Bonus(game, position, sf::Color::Green){}
+
+	virtual void Activate() override;
+};
+
+class PlatformBonus : public Bonus {
+public:
+	PlatformBonus(Game& game, const sf::Vector2f& position) : Bonus(game, position, sf::Color::Green) {}
 
 	virtual void Activate() override;
 };

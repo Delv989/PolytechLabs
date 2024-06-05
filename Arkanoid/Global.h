@@ -10,6 +10,7 @@ namespace Global {
     static constexpr float PlatformSpeed = .5f;
     static constexpr float PlatformWidth = 80.f;
     static constexpr float PlatformHeight = 12.f;
+    static constexpr float PlatfromExtension = 10.f;
 
     static constexpr float BallRadius = 10.f;
     static constexpr int BallAcceleration = 2;

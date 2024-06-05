@@ -17,6 +17,9 @@ public:
     virtual void Move() override;
     virtual void Draw() override;
 
+    void SetSize(const sf::Vector2f& size);
+    sf::Vector2f GetSize();
+
 private:
     sf::RectangleShape shape;
 };

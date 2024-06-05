@@ -10,7 +10,10 @@ void Ball::Update() {
     }
 
     if ((float)game.GetWindow().getSize().y < Bottom()) {
-        game.DecreaseScore();
+        if (game.isFloorPlatform())
+            game.DeleteFloorPlatform();
+        else
+            game.DecreaseScore();
         RotateY();
     }
 

@@ -31,3 +31,11 @@ void Bonus::Move() {
 void MovingBrickBonus::Activate() {
 	game.SpawnMovingBrick();
 }
+
+void FloorBonus::Activate() {
+	game.MakeFloorPlatform();
+}
+
+void PlatformBonus::Activate() {
+	game.ExtendPlatform();
+}

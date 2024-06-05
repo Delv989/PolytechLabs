@@ -9,10 +9,12 @@ GameInstance::GameInstance(const sf::Vector2f& platform_pos)
 
 void GameInstance::IncreaseScore() {
     score++;
+    std::cout << "Your score : " << score << "\n";
 }
 
 void GameInstance::DecreaseScore() {
     score--;
+    std::cout << "Your score : " << score << "\n";
 }
 
 void GameInstance::Start() {
@@ -30,7 +32,7 @@ void GameInstance::Start() {
 void GameInstance::Run() {
     while (true) {
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape)) {
-            std::cout << score;
+            std::cout << "Your final score : " << score << "\n";
             return;
         }
 
@@ -70,7 +72,7 @@ void GameInstance::Run() {
             }
 
             if (win) {
-                std::cout << score;
+                std::cout << "Your final score : " << score << "\n";
                 return;
             }
         }
@@ -121,7 +123,6 @@ void GameInstance::SpawnBricks() {
                     Global::BricksGap + (float)j * (Global::BrickWidth + Global::BricksGap),
                     Global::BricksGap + (float)i * (Global::BrickHeight + Global::BricksGap)
             };
-            
             if (id % 11 == 0) {
                 bricks.emplace_front(std::make_shared<IndestructibleBrick>(*this, pos));
                 continue;
@@ -130,20 +131,31 @@ void GameInstance::SpawnBricks() {
                 bricks.emplace_front(std::make_shared<AccelerationBrick>(*this, pos));
                 continue;
             }
-            if (id % 17 == 0) {
+            if (id % 19 == 0) {
                 bricks.emplace_front(std::make_shared<BonusBrick>(*this, pos));
                 continue;
             }
             
             bricks.emplace_front(std::make_shared<DefaultBrick>(*this, pos));
-            
         }
     }
 
 }
 
 void GameInstance::SpawnBonus(const sf::Vector2f& position) {
-    bonuses.emplace_back(std::make_shared<MovingBrickBonus>(*this, position));
+    int type = rand() % 3;
+    switch (type) {
+    case 0:
+        bonuses.emplace_back(std::make_shared<PlatformBonus>(*this, position));
+        break;
+    case 1: 
+        bonuses.emplace_back(std::make_shared<MovingBrickBonus>(*this, position));
+        break;
+    case 2:
+        bonuses.emplace_back(std::make_shared<FloorBonus>(*this, position));
+        break;
+    }
+    
 }
 
 void GameInstance::Speedup() {
@@ -152,4 +164,21 @@ void GameInstance::Speedup() {
 
 void GameInstance::SpawnMovingBrick() {
     bricks.emplace_front(std::make_shared<MovingBrick>(*this));
+}
+
+void GameInstance::MakeFloorPlatform() {
+    hasFloorPlatform = true;
+}
+
+bool GameInstance::isFloorPlatform() {
+    return hasFloorPlatform;
+}
+
+void GameInstance::DeleteFloorPlatform() {
+    hasFloorPlatform = false;
+}
+
+void GameInstance::ExtendPlatform() {
+    sf::Vector2f cur_size = mPlatform.GetSize();
+    mPlatform.SetSize({ cur_size.x + Global::PlatfromExtension, cur_size.y});
 }

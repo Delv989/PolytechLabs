@@ -20,3 +20,11 @@ void Platform::Move() {
 void Platform::Draw() {
     game.GetWindow().draw(shape);
 }
+
+void Platform::SetSize(const sf::Vector2f& size) {
+    shape.setSize(size);
+}
+
+sf::Vector2f Platform::GetSize() {
+    return shape.getSize();
+}

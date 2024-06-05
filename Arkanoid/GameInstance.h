@@ -30,10 +30,19 @@ public:
 
     virtual void SpawnMovingBrick() override;
 
+    virtual void MakeFloorPlatform() override;
+    virtual bool isFloorPlatform() override;
+    virtual void DeleteFloorPlatform() override;
+
+    virtual void ExtendPlatform() override;
+
     void Start();
     void Run();
 
     virtual void Speedup() override;
+
+
+   
 
 private:
     void SpawnBricks();
@@ -48,6 +57,8 @@ private:
     std::list<std::shared_ptr<Bonus>> bonuses;
 
     int score{ 0 };
+
+    bool hasFloorPlatform{ false };
 
     int fps{ Global::IterationsPerFrame };
 };

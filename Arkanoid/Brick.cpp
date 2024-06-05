@@ -64,7 +64,6 @@ void MovingBrick::Update() {
 
 		}
 	}
-	//std::cout << this->GetSpeed().x << this->GetSpeed().y;
 	Move();
 }
 

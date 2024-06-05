@@ -23,6 +23,13 @@ public:
 
     virtual void SpawnMovingBrick() = 0;
 
+    virtual void MakeFloorPlatform() = 0;
+    virtual bool isFloorPlatform() = 0;
+    virtual void DeleteFloorPlatform() = 0;
+
+    virtual void ExtendPlatform() = 0;
+    
+
     virtual void Speedup() = 0;
 
 };
