@@ -1,5 +1,4 @@
-#ifndef SUBJECT_HPP
-#define SUBJECT_HPP
+#pragma once
 
 #include <unordered_map>
 #include <string>
@@ -14,5 +13,3 @@ public:
     std::string capitalize_sentences(const std::unordered_map<std::string, std::any>& args);
     std::string number_sentences(const std::unordered_map<std::string, std::any>& args);
 };
-
-#endif

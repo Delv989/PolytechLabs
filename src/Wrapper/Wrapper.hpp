@@ -1,5 +1,4 @@
-#ifndef WRAPPER_HPP
-#define WRAPPER_HPP
+#pragma once
 
 #include <functional>
 #include <string>
@@ -17,5 +16,3 @@ private:
     Subject* subject_;
     std::function<std::string(const std::unordered_map<std::string, std::any>&)> function_;
 };
-
-#endif

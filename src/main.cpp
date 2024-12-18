@@ -7,7 +7,6 @@
 #include "Subject/Subject.hpp"
 #include "Wrapper/Wrapper.hpp"
 
-// Функция для записи текста в файл
 void save_text_to_file(const std::string& file_path, const std::string& content) {
     std::ofstream output_file(file_path);
     if (!output_file.is_open()) {
@@ -16,7 +15,6 @@ void save_text_to_file(const std::string& file_path, const std::string& content)
     output_file << content;
 }
 
-// Функция для чтения текста из файла
 std::string load_text_from_file(const std::string& file_path) {
     std::ifstream input_file(file_path);
     if (!input_file.is_open()) {
@@ -27,7 +25,6 @@ std::string load_text_from_file(const std::string& file_path) {
     return buffer.str();
 }
 
-// Функция для выполнения тестов
 void execute_tests() {
     const std::string test_file = "test_text.txt";
     const std::string sample_text = "the cat jumped. he smiled brightly";

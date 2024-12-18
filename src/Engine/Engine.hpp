@@ -1,5 +1,4 @@
-#ifndef ENGINE_HPP
-#define ENGINE_HPP
+#pragma once
 
 #include <unordered_map>
 #include <string>
@@ -14,5 +13,3 @@ public:
 private:
     std::unordered_map<std::string, Wrapper*> commands_;
 };
-
-#endif
